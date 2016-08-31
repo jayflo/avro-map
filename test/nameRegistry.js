@@ -3,27 +3,21 @@
 var test = require('tape');
 
 var nameRegistry = require('../lib/nameRegistry');
+var NameRegistry = nameRegistry.NameRegistry;
 var entries = require('./data/entries');
 
-// var NameRegistry = nameRegistry.NameRegistry;
-// var NameDescriptor = nameRegistry.NameDescriptor;
-//
-// function registryFactory() {
-//   return new NameRegistry();
-// }
-//
-// function descriptorFactory(un, n, r, a) {
-//   return new NameDescriptor(un, n, r, a);
-// }
+function registryFactory() {
+  return new NameRegistry();
+}
 
-// test('nameRegistry isRegisterable', function(t) {
-//   t.ok(nameRegistry._isRegisterable(entries.record()));
-//   t.ok(nameRegistry._isRegisterable(entries.enum()));
-//   t.ok(nameRegistry._isRegisterable(entries.fixed()));
-//   t.notOk(nameRegistry._isRegisterable(entries.array()));
-//   t.notOk(nameRegistry._isRegisterable(entries.map()));
-//   t.notOk(nameRegistry._isRegisterable(entries.union()));
-//   t.notOk(nameRegistry._isRegisterable(entries.primitive()));
+// test('NameRegistry nameDescriptor', function(t) {
+//   var ns1 = 'a.b';
+//   var name = 'g';
+//   var fullname = ns1 + '.' + name;
+
+//   t.equal(nameRegistry._getNamespace(name), '');
+//   t.equal(nameRegistry._getNamespace(''), '');
+//   t.equal(nameRegistry._getNamespace(fullname), ns1);
 //   t.end();
 // });
 
@@ -38,7 +32,7 @@ test('nameRegistry getNamespace', function(t) {
   t.end();
 });
 
-test('nameRegistry _getUnqualifiedName', function(t) {
+test('nameRegistry getUnqualifiedName', function(t) {
   var ns1 = 'a.b';
   var name = 'g';
   var fullname = ns1 + '.' + name;
@@ -48,7 +42,7 @@ test('nameRegistry _getUnqualifiedName', function(t) {
   t.end();
 });
 
-test('nameRegistry _isFullName', function(t) {
+test('nameRegistry isFullName', function(t) {
   var ns1 = 'a';
   var name = 'g';
   var fullname = ns1 + '.' + name;
