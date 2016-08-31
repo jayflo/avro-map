@@ -1,0 +1,37 @@
+{
+  "name": "avro-map",
+  "version": "0.0.1",
+  "description": "An AVRO utility",
+  "main": "index.js",
+  "scripts": {
+    "test": "node node_modules/tape/bin/tape test/**/*.js",
+    "test-watch": "node node_modules/tape-watch/bin/tape-watch test/**/*.js",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayflo/avro-map.git"
+  },
+  "keywords": [
+    "avro",
+    "validation"
+  ],
+  "author": "Jaret Flores",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jayflo/avro-map/issues"
+  },
+  "homepage": "https://github.com/jayflo/avro-map#readme",
+  "devDependencies": {
+    "eslint": "^3.2.2",
+    "eslint-config-google": "^0.6.0",
+    "tape": "^4.6.0",
+    "tape-watch": "^2.2.3"
+  },
+  "eslintConfig": {
+    "extends": "google"
+  },
+  "dependencies": {
+    "lodash": "^4.14.1"
+  }
+}
