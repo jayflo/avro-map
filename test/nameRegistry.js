@@ -48,19 +48,6 @@ test('nameRegistry _getUnqualifiedName', function(t) {
   t.end();
 });
 
-test('nameRegistry _safeJoin', function(t) {
-  var ns1 = 'a';
-  var name = 'g';
-  var empty = '';
-  var fullname = ns1 + '.' + name;
-
-  t.equal(nameRegistry._safeJoin([empty, name], '.'), name);
-  t.equal(nameRegistry._safeJoin([empty, empty], '.'), empty);
-  t.equal(nameRegistry._safeJoin([name, empty], '.'), name);
-  t.equal(nameRegistry._safeJoin([ns1, name], '.'), fullname);
-  t.end();
-});
-
 test('nameRegistry _isFullName', function(t) {
   var ns1 = 'a';
   var name = 'g';

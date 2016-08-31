@@ -21,3 +21,17 @@ test('utils setKeys', function(t) {
   t.equal(Object.keys(obj).length, 3);
   t.end();
 });
+
+
+test('utils safeJoin', function(t) {
+  var ns1 = 'a';
+  var name = 'g';
+  var empty = '';
+  var fullname = ns1 + '.' + name;
+
+  t.equal(utils.safeJoin([empty, name], '.'), name);
+  t.equal(utils.safeJoin([empty, empty], '.'), empty);
+  t.equal(utils.safeJoin([name, empty], '.'), name);
+  t.equal(utils.safeJoin([ns1, name], '.'), fullname);
+  t.end();
+});
