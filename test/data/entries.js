@@ -2,8 +2,8 @@
 
 var _ = require('lodash');
 
-var constants = require('../../lib/constants');
-var PRIMITIVE_TYPE_NAMES = constants.PRIMITIVE_TYPE_NAMES;
+var map = require('../../lib/map');
+var PRIMITIVE_TYPE_NAMES = map.PRIMITIVE_TYPE_NAMES;
 var primitiveTypeArray = Object.keys(PRIMITIVE_TYPE_NAMES);
 
 module.exports = Object.freeze({
@@ -53,7 +53,7 @@ module.exports = Object.freeze({
   },
   primitive: function(s) {
     return s || PRIMITIVE_TYPE_NAMES[
-      primitiveTypeArray[_.random(primitiveTypeArray.length)]
+      primitiveTypeArray[_.random(primitiveTypeArray.length - 1)]
     ];
   }
 });

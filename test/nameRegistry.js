@@ -16,16 +16,16 @@ var entries = require('./data/entries');
 //   return new NameDescriptor(un, n, r, a);
 // }
 
-test('nameRegistry isRegisterable', function(t) {
-  t.ok(nameRegistry._isRegisterable(entries.record()));
-  t.ok(nameRegistry._isRegisterable(entries.enum()));
-  t.ok(nameRegistry._isRegisterable(entries.fixed()));
-  t.notOk(nameRegistry._isRegisterable(entries.array()));
-  t.notOk(nameRegistry._isRegisterable(entries.map()));
-  t.notOk(nameRegistry._isRegisterable(entries.union()));
-  t.notOk(nameRegistry._isRegisterable(entries.primitive()));
-  t.end();
-});
+// test('nameRegistry isRegisterable', function(t) {
+//   t.ok(nameRegistry._isRegisterable(entries.record()));
+//   t.ok(nameRegistry._isRegisterable(entries.enum()));
+//   t.ok(nameRegistry._isRegisterable(entries.fixed()));
+//   t.notOk(nameRegistry._isRegisterable(entries.array()));
+//   t.notOk(nameRegistry._isRegisterable(entries.map()));
+//   t.notOk(nameRegistry._isRegisterable(entries.union()));
+//   t.notOk(nameRegistry._isRegisterable(entries.primitive()));
+//   t.end();
+// });
 
 test('nameRegistry getNamespace', function(t) {
   var ns1 = 'a.b';

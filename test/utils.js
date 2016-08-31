@@ -9,7 +9,7 @@ test('utils setKeys', function(t) {
   var keys = ['a', 'b', 'c'];
   var value = 1;
 
-  utils.setKeys(obj, [], 1);
+  utils.setKeys({}, [], 1);
 
   t.equal(Object.keys(obj).length, 0);
 
@@ -22,6 +22,20 @@ test('utils setKeys', function(t) {
   t.end();
 });
 
+test('utils fromKeyValuePairs', function(t) {
+  var kvps = [['a', 1], ['b', 2], ['c', 3]];
+  var obj = utils.fromKeyValuePairs([]);
+
+  t.equal(Object.keys(obj).length, 0);
+
+  obj = utils.fromKeyValuePairs(kvps);
+
+  t.equal(obj.a, 1);
+  t.equal(obj.b, 2);
+  t.equal(obj.c, 3);
+  t.equal(Object.keys(obj).length, 3);
+  t.end();
+});
 
 test('utils safeJoin', function(t) {
   var ns1 = 'a';
