@@ -10,16 +10,187 @@ function registryFactory() {
   return new NameRegistry();
 }
 
-// test('NameRegistry nameDescriptor', function(t) {
-//   var ns1 = 'a.b';
-//   var name = 'g';
-//   var fullname = ns1 + '.' + name;
+test('NameRegistry constructor', function(t) {
+  registryFactory();
+  t.end();
+});
 
-//   t.equal(nameRegistry._getNamespace(name), '');
-//   t.equal(nameRegistry._getNamespace(''), '');
-//   t.equal(nameRegistry._getNamespace(fullname), ns1);
-//   t.end();
-// });
+test('NameRegistry throws', function(t) {
+  var r = registryFactory();
+  var namespace = 'a';
+  var entry = {
+    namespace: 'b',
+    aliases: ['c']
+  };
+
+  t.throws(function() {
+    r.add(null, entry, 1)
+  }, Error);
+  t.throws(function() {
+    r.add(namespace, entry, 1)
+  }, Error);
+  t.end();
+});
+
+test('NameRegistry simple name, no namespaces', function(t) {
+  var r = registryFactory();
+  var entry = {
+    name: 'a',
+    aliases: ['b']
+  };
+
+  r.add(null, entry, 1);
+
+  t.ok(r.has(null, entry));
+  t.ok(r.has(null, 'a'));
+  t.ok(r.has(null, 'b'));
+  t.end();
+});
+
+test('NameRegistry simple name with namespace', function(t) {
+  var entry = {
+    name: 'a',
+    namespace: 'b',
+    aliases: ['c']
+  };
+  var enclosingNamespace = 'd';
+
+  [null, enclosingNamespace].forEach(function(en) {
+    var r = registryFactory();
+
+    r.add(en, entry, 1);
+
+    t.ok(r.has(en, entry));
+    t.ok(r.has(en, 'b.a'));
+    t.ok(r.has(en, 'b.c'));
+    t.notOk(r.has(en, 'a'));
+    t.notOk(r.has(en, 'c'));
+    t.notOk(r.has(en, 'd.a'));
+    t.notOk(r.has(en, 'd.b'));
+  });
+  t.end();
+});
+
+test('NameRegistry simple name with enclosingNamespace', function(t) {
+  var r = registryFactory();
+  var entry = {
+    name: 'a',
+    aliases: ['b']
+  };
+  var enclosingNamespace = 'c';
+
+  r.add(enclosingNamespace, entry, 1);
+
+  t.ok(r.has(enclosingNamespace, entry));
+  t.ok(r.has(enclosingNamespace, 'a'));
+  t.ok(r.has(enclosingNamespace, 'b'));
+  t.ok(r.has(null, 'c.a'));
+  t.ok(r.has(null, 'c.b'));
+  t.notOk(r.has(null, entry));
+  t.notOk(r.has(null, 'a'));
+  t.notOk(r.has(null, 'b'));
+  t.end();
+});
+
+test('NameRegistry fullname', function(t) {
+  var entry = {
+    name: 'a.b',
+    aliases: ['c']
+  };
+  var enclosingNamespace = 'e';
+
+  [null, enclosingNamespace].forEach(function(en) {
+    var r = registryFactory();
+
+    r.add(en, entry, 1);
+
+    t.ok(r.has(en, entry));
+    t.ok(r.has(en, 'a.b'));
+    t.ok(r.has(en, 'a.c'));
+    t.notOk(r.has(en, 'b'));
+    t.notOk(r.has(en, 'c'));
+  });
+  t.end();
+});
+
+test('NameRegistry fullname with namespace', function(t) {
+  var entry = {
+    name: 'a.b',
+    namespace: 'c',
+    aliases: ['d']
+  };
+  var enclosingNamespace = 'e';
+
+  [null, enclosingNamespace].forEach(function(en) {
+    var r = registryFactory();
+
+    r.add(en, entry, 1);
+
+    t.ok(r.has(en, entry));
+    t.ok(r.has(en, 'a.b'));
+    t.ok(r.has(en, 'a.d'));
+    t.notOk(r.has(en, 'b'));
+    t.notOk(r.has(en, 'd'));
+    t.notOk(r.has(en, 'c.b'));
+    t.notOk(r.has(en, 'c.d'));
+  });
+  t.end();
+});
+
+test('nameDescriptor simple name, no namespace', function(t) {
+  var entry = {
+    name: 'a',
+    aliases: ['b']
+  };
+  var nd = NameRegistry.nameDescriptor(null, entry);
+
+  t.equal(nd.representative, 'a');
+  t.equal(nd.namespace, '');
+  t.equal(nd.unqualifiedName, 'a');
+  t.ok(nd.aliases.indexOf('a') + 1);
+  t.ok(nd.aliases.indexOf('b') + 1);
+  t.end();
+});
+
+test('nameDescriptor simple name, namespace', function(t) {
+  var entry = {
+    name: 'a',
+    namespace: 'b',
+    aliases: ['c']
+  };
+  var enclosingNamespace = 'd';
+
+  [null, enclosingNamespace].forEach(function(en) {
+    var nd = NameRegistry.nameDescriptor(en, entry);
+
+    t.equal(nd.representative, 'b.a');
+    t.equal(nd.namespace, 'b');
+    t.equal(nd.unqualifiedName, 'a');
+    t.ok(nd.aliases.indexOf('b.a') + 1);
+    t.ok(nd.aliases.indexOf('b.c') + 1);
+  });
+  t.end();
+});
+
+test('nameDescriptor full name', function(t) {
+  var entry = {
+    name: 'a.b',
+    namespace: 'c',
+    aliases: ['d']
+  };
+  var enclosingNamespace = 'e';
+
+  [null, enclosingNamespace].forEach(function(en) {
+    var nd = NameRegistry.nameDescriptor(en, entry);
+
+    t.equal(nd.representative, 'a.b');
+    t.equal(nd.namespace, 'a');
+    t.equal(nd.unqualifiedName, 'b');
+    t.ok(nd.aliases.indexOf('a.b') + 1);
+    t.ok(nd.aliases.indexOf('a.d') + 1);
+  });
+  t.end();
+});
 
 test('nameRegistry getNamespace', function(t) {
   var ns1 = 'a.b';
