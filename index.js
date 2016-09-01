@@ -1,3 +1,5 @@
 'use strict';
 
-module.exports = {};
+module.exports = Object.freeze({
+    map: require('./lib/map').map
+});

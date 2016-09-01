@@ -1,7 +1,7 @@
 {
-  "name": "avro-map",
+  "name": "@jayflo/avro-map",
   "version": "0.0.1",
-  "description": "An AVRO utility",
+  "description": "An AVRO schema parsing utility.",
   "main": "index.js",
   "scripts": {
     "test": "node node_modules/tape/bin/tape 'test/**/*.js'",

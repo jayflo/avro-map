@@ -6,6 +6,47 @@ var map = require('../lib/map');
 var entries = require('./data/entries');
 var COMPLEX_TYPE_NAMES = map.COMPLEX_TYPE_NAMES;
 
+test('map recordRecursables', function(t) {
+  var field = {name: 'a', type: 'b'};
+  var entry = {fields: [field]};
+  var recursables = map._recordRecursables(entry);
+
+  t.equal(recursables.length, 1);
+  t.equal(recursables[0].key, field.name);
+  t.equal(recursables[0].entry, field.type);
+  t.end();
+});
+
+test('map arrayRecursables', function(t) {
+  var entry = {type: 'array', items: 'a'};
+  var recursables = map._arrayRecursables(entry);
+
+  t.equal(recursables.length, 1);
+  t.equal(recursables[0].key, '$index');
+  t.equal(recursables[0].entry, 'a');
+  t.end();
+});
+
+test('map mapRecursables', function(t) {
+  var entry = {type: 'map', values: 'a'};
+  var recursables = map._mapRecursables(entry);
+
+  t.equal(recursables.length, 1);
+  t.equal(recursables[0].key, '$key');
+  t.equal(recursables[0].entry, 'a');
+  t.end();
+});
+
+test('map unionRecursables', function(t) {
+  var entry = ['a'];
+  var recursables = map._unionRecursables(entry);
+
+  t.equal(recursables.length, 1);
+  t.equal(recursables[0].key, '$member0');
+  t.equal(recursables[0].entry, 'a');
+  t.end();
+});
+
 test('map isRegisterable', function(t) {
   t.ok(map._isRegisterable(entries.record()));
   t.ok(map._isRegisterable(entries.enum()));
