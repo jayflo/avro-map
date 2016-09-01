@@ -57,7 +57,7 @@ var tree = map(schema, function(parent, typeObj, keyChain) {
         As shown, a union's type will be set to `"union"` even though a union in an AVRO schema is simply an array.  We do this to standardize this argument's structure received by `cb`.  When `entry.type` is a primitive, `entry.ref` will not be present.
     3. `String[] keyChain`: an array of keys representing the location of this type within an object conforming to `schema`.  That is, a string is pushed onto this array for each recursive call.  The table below shows which key is added for each recursable type:
 
-        | recursable type | key containing recursables | add to `keyChain` |
+        | type | recursable properties | added to `keyChain` |
         | --- | --- | --- |
         | record | `fields[i]` | `fields[i].name` |
         | array | `items` | `"$index"`|
