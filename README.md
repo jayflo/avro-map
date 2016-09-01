@@ -43,21 +43,15 @@ var tree = map(schema, function(parent, typeObj, keyChain) {
     2. `Object entry`: `entry.type` will store the native AVRO type of the entry, e.g. `string`, `record`, `array`, etc..  `entry.ref` will be a reference to the type's **raw** definition in `schema`.  Example:
 
         ```js
-        {
-            type: 'union',
-            entry: ['string', 'A.B.TypeC']
-        }
+        { type: 'union',
+          entry: ['string', 'A.B.TypeC'] }
 
         // or
 
-        {
-            type: 'fixed',
-            entry: {
-                type: 'fixed',
-                size: 16,
-                name: 'fixedSixteen'
-            }
-        }
+        { type: 'fixed',
+          entry: { type: 'fixed',
+                   size: 16,
+                   name: 'fixedSixteen' } }
         ```
 
         As shown, a union's type will be set to `"union"` even though a union in an AVRO schema is simply an array.  We do this to standardize this argument's structure received by `cb`.  When `entry.type` is a primitive, `entry.ref` will not be present.
