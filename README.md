@@ -31,11 +31,9 @@ var tree = map(schema, function(parent, typeObj, keyChain) {
 }, treeFactory);
 ```
 
-# API
+# Documentation
 
-### module
-
-##### `map(schema, cb, initialValueFn)`
+### `map(schema, cb, initialValueFn)`
 
 **arguments**:
 
