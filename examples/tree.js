@@ -10,18 +10,31 @@ function Tree(parent, children, data) {
 }
 
 Object.defineProperties(Tree.prototype, {
-  bfsForEach: {value: bfsForEach}
+  bfsReduce: {value: bfsReduce},
+  toString: {value: toString}
 })
 
-function bfsForEach(cb) {
+function bfsReduce(cb, initialValue) {
   var level = [this];
 
   while (level.length) {
-    cb(level);
+    initialValue = cb(initialValue, level);
     level = level.reduce(function(nextLevel, t) {
       return nextLevel.concat(t.children);
     }, []);
   }
+
+  return initialValue;
+}
+
+function toString() {
+  return this.bfsReduce(function(result, level) {
+    return result.concat(
+      level.map(function(t) {
+        return t.data.path;
+      }).join(' | ')
+    );
+  }, []).join('\n');
 }
 
 function treeFactory(parent, children, data) {
@@ -47,7 +60,7 @@ var schema = [{
 }];
 var schemaTrees = map(schema, function(parent, entry, keyChain) {
     var t = treeFactory(parent, null, {
-      path: keyChain.join('.'),
+      path: keyChain.join('.') || 'ROOT',
       type: entry.type
     });
 
@@ -56,8 +69,4 @@ var schemaTrees = map(schema, function(parent, entry, keyChain) {
     return t;
 });
 
-schemaTrees[schemaTrees.length - 1].bfsForEach(function(level) {
-  console.log(level.map(function(t) {
-    return t.data.path;
-  }).join(', ') + '\n');
-})
+console.log(schemaTrees[schemaTrees.length - 1].toString());
