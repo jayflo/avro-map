@@ -14,7 +14,9 @@
   },
   "keywords": [
     "avro",
-    "validation"
+    "schema",
+    "map",
+    "iterate"
   ],
   "author": "Jaret Flores",
   "license": "MIT",
