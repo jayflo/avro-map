@@ -1,5 +1,5 @@
 {
-  "name": "@jayflo/avro-map",
+  "name": "avro-map",
   "version": "0.0.1",
   "description": "An AVRO schema parsing utility.",
   "main": "index.js",
@@ -32,6 +32,7 @@
     "extends": "google"
   },
   "dependencies": {
+    "debug": "~2.2.0",
     "lodash": "^4.14.1"
   }
 }
