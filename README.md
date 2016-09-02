@@ -1,6 +1,6 @@
 # avro-map
 
-This package (currently) provides a single method for traversing an AVRO schema.  The traversal will automatically populate all type names with their definitions.  That is, given a named type
+This package (currently) provides a single method for easily traversing an AVRO schema.  The traversal will automatically resolve all named references with their definitions.  That is, when the traversal encounters the full name `A.B.C` in the schema, it will provide the definition, e.g.
 
 ```js
 {
@@ -10,7 +10,12 @@ This package (currently) provides a single method for traversing an AVRO schema.
 }
 ```
 
-when the traversal encounters a string reference to `A.B.C`, the above object will be retrieved and passed to the mapping callback.  This will allow you to easily transform the schema into data structures that may be easier to work with.  **Name resolution follows all the same rules as defined by the AVRO specification**.
+Essentially, you can traverse an AVRO schema:
+
+1. With no traversal logic
+2. As if all (String) name references (e.g. `A.B.C`) have been replaced by their (Object) definition.
+
+ This will allow you to easily transform the schema into data structures that may be easier to work with.  **Name resolution follows all the same rules as defined by the AVRO specification**.
 
 # Install/Support
 
@@ -93,9 +98,9 @@ var tree = map(schema, function(parent, typeObj, keyChain) {
 
 avro-map can be use when one would like to traverse an AVRO schema in a depth-first search manner, e.g. build a tree.
 
-Simply applying `Array.prototype.map` to the (array) AVRO schema has little value; each item in the array is a complex object and contains name(space)d references to previously defined types.  Hence, if one wants to map the `i`-th entry in the AVRO schema array, one must first iterate through entries `0` to `i-1`.
+Simply applying `Array.prototype.map` to the AVRO schema (array) has little value; each item in the array is a complex object and contains name(space)d references to previously defined types.  Hence, if one wants to map the `i`-th entry in the AVRO schema array, one must first iterate through entries `0` to `i-1`.
 
-This is exactly what avro-map automates.  The `map` function tries to do a little as possible while still allowing one to easily traverse the entire schema as if the name(space)d references did not exist.  As each type is encountered, `map` will store/retrieve types and provide those to the callback.  The return values of the callback are `reduce`d down each DFS branch, i.e., the return value of each execution of the callback is provided as an argument to each of it's children.
+This is exactly what avro-map automates.  The `map` function tries to do a little as possible while still allowing one to easily traverse the entire schema as if the name(space)d references did not exist.  As each type is encountered, `map` will store/retrieve types and provide those to the callback function.  The return values of the callback are `reduce`d down each DFS branch, i.e., the return value of the callback at one schema entry is provided as an argument to the callback for each child entry.
 
 # Example `map` execution
 
