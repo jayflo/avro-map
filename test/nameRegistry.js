@@ -4,7 +4,6 @@ var test = require('tape');
 
 var nameRegistry = require('../lib/nameRegistry');
 var NameRegistry = nameRegistry.NameRegistry;
-var entries = require('./data/entries');
 
 function registryFactory() {
   return new NameRegistry();
@@ -24,10 +23,10 @@ test('NameRegistry throws', function(t) {
   };
 
   t.throws(function() {
-    r.add(null, entry, 1)
+    r.add(null, entry, 1);
   }, Error);
   t.throws(function() {
-    r.add(namespace, entry, 1)
+    r.add(namespace, entry, 1);
   }, Error);
   t.end();
 });

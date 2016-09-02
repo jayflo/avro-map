@@ -1,7 +1,6 @@
 'use strict';
 
 var map = require('../lib/map').map;
-var pretty = require('../lib/utils').pretty;
 
 function Tree(parent, children, data) {
   this.parent = parent || null;
@@ -12,7 +11,7 @@ function Tree(parent, children, data) {
 Object.defineProperties(Tree.prototype, {
   bfsReduce: {value: bfsReduce},
   toString: {value: toString}
-})
+});
 
 function bfsReduce(cb, initialValue) {
   var level = [this];
@@ -42,31 +41,31 @@ function treeFactory(parent, children, data) {
 }
 
 var schema = [{
-    type: 'record',
-    name: 'A',
-    fields: [{
-      name: 'A1', type: 'string'
-    }, {
-      name: 'A2', type: 'int'
-    }]
+  type: 'record',
+  name: 'A',
+  fields: [{
+    name: 'A1', type: 'string'
+  }, {
+    name: 'A2', type: 'int'
+  }]
 }, {
-    type: 'record',
-    name: 'B',
-    fields: [{
-      name: 'B1', type: [null, 'int', 'A']
-    }, {
-      name: 'B2', type: {type: 'array', items: 'string'}
-    }]
+  type: 'record',
+  name: 'B',
+  fields: [{
+    name: 'B1', type: [null, 'int', 'A']
+  }, {
+    name: 'B2', type: {type: 'array', items: 'string'}
+  }]
 }];
 var schemaTrees = map(schema, function(parent, entry, keyChain) {
-    var t = treeFactory(parent, null, {
-      path: keyChain.join('.') || 'ROOT',
-      type: entry.type
-    });
+  var t = treeFactory(parent, null, {
+    path: keyChain.join('.') || 'ROOT',
+    type: entry.type
+  });
 
-    ((parent || {}).children || []).push(t);
+  ((parent || {}).children || []).push(t);
 
-    return t;
+  return t;
 });
 
 console.log(schemaTrees[schemaTrees.length - 1].toString());

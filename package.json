@@ -4,8 +4,8 @@
   "description": "An AVRO schema parsing utility.",
   "main": "index.js",
   "scripts": {
-    "test": "node node_modules/tape/bin/tape 'test/**/*.js'",
-    "test-watch": "node node_modules/tape-watch/bin/tape-watch 'test/**/*.js'",
+    "test": "node node_modules/tape/bin/tape test/**/*.js",
+    "test-watch": "node node_modules/tape-watch/bin/tape-watch test/**/*.js",
     "lint": "node node_modules/eslint/bin/eslint.js ."
   },
   "repository": {
