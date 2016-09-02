@@ -30,15 +30,16 @@ Quickly build a standard n-ary tree:
 var map = require('avro-map').map;
 var schema = getAvroSchema();
 var treeFactory = getTreeFactory();
-var tree = map(schema, function(parent, typeObj, keyChain) {
+var schemaTrees = map(schema, function(parent, entry, keyChain) {
     var t = treeFactory();
 
-    t.type = typeObj.type;
-    t.data = collectSomeData(typeObj.entry, keyChain);
-    parent.children.push(t);
+    t.type = entry.type;
+    t.data = collectSomeData(entry.ref, keyChain);
+    t.parent = parent;
+    (parent || []).children.push(t);
 
     return t;
-}, treeFactory);
+});
 ```
 
 # Documentation
@@ -55,7 +56,7 @@ var tree = map(schema, function(parent, typeObj, keyChain) {
         | key | value type | description |
         | --- | --- | --- |
         | `type` | `String` | native type e.g. `"record"`, `"string"`, etc... |
-        | `entry` | `Object` | raw definition from schema |
+        | `ref` | `Object` | raw definition from schema |
         | `recursive` | `Boolean` | `true` when `entry` has parent with same fullname |
 
         Examples:
@@ -63,13 +64,13 @@ var tree = map(schema, function(parent, typeObj, keyChain) {
         ```js
         { type: 'union',
           recursive: false,
-          entry: ['string', 'A.B.TypeC'] }
+          ref: ['string', 'A.B.TypeC'] }
 
         // or
 
         { type: 'fixed',
           recursive: false,
-          entry: { type: 'fixed',
+          ref: { type: 'fixed',
                    size: 16,
                    name: 'fixedSixteen' } }
         ```
