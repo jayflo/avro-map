@@ -10,11 +10,6 @@ This package (currently) provides a single method for easily traversing an AVRO 
 }
 ```
 
-Essentially, you can traverse an AVRO schema:
-
-1. With no traversal logic
-2. As if all (String) name references (e.g. `A.B.C`) have been replaced by their (Object) definition.
-
 This will allow you to easily transform the schema into data structures that may be easier to work with.  **Name resolution follows all the same rules as defined by the AVRO specification**.
 
 # Install/Support
