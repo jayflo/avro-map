@@ -5,8 +5,8 @@ var test = require('tape');
 var nameRegistry = require('../lib/nameRegistry');
 var NameRegistry = nameRegistry.NameRegistry;
 
-function registryFactory() {
-  return new NameRegistry();
+function registryFactory(invalidNames) {
+  return new NameRegistry(invalidNames);
 }
 
 test('NameRegistry constructor', function(t) {
@@ -15,7 +15,7 @@ test('NameRegistry constructor', function(t) {
 });
 
 test('NameRegistry throws', function(t) {
-  var r = registryFactory();
+  var r = registryFactory(['d']);
   var namespace = 'a';
   var entry = {
     namespace: 'b',
@@ -28,6 +28,13 @@ test('NameRegistry throws', function(t) {
   t.throws(function() {
     r.add(namespace, entry, 1);
   }, Error);
+
+  entry.name = 'd';
+
+  t.throws(function() {
+    r.add(namespace, entry, 1);
+  }, Error);
+
   t.end();
 });
 

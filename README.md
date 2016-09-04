@@ -198,6 +198,8 @@ avro-map is not an AVRO schema validator and it will not check that all schema e
 
 is not a valid AVRO schema but avro-map will register `someName` in the global namespace and then look it up when it recurses into `items`.
 
+**Creating a type whose `name` is the name of an AVRO primitive will throw an error.**  Primitive names are reserved and injected into every namespace.
+
 # Bugs/Issues<a name="bugsIssues"></a>
 
 * Please open an Issue on the Github repo.
