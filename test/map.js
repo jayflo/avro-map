@@ -47,18 +47,6 @@ test('map unionRecursables', function(t) {
   t.end();
 });
 
-test('map isRegisterable', function(t) {
-  t.ok(map._isRegisterable(entries.record()));
-  t.ok(map._isRegisterable(entries.enum()));
-  t.ok(map._isRegisterable(entries.fixed()));
-
-  t.notOk(map._isRegisterable(entries.array()));
-  t.notOk(map._isRegisterable(entries.map()));
-  t.notOk(map._isRegisterable(entries.union()));
-  t.notOk(map._isRegisterable(entries.primitive()));
-  t.end();
-});
-
 test('map isRecursable', function(t) {
   t.ok(map._isRecursable(COMPLEX_TYPE_NAMES.RECORD));
   t.ok(map._isRecursable(COMPLEX_TYPE_NAMES.ARRAY));
@@ -71,42 +59,6 @@ test('map isRecursable', function(t) {
   t.end();
 });
 
-test('map isMapEntry', function(t) {
-  t.ok(map._isMapEntry(entries.map()));
-
-  t.notOk(map._isMapEntry(entries.record()));
-  t.notOk(map._isMapEntry(entries.enum()));
-  t.notOk(map._isMapEntry(entries.fixed()));
-  t.notOk(map._isMapEntry(entries.array()));
-  t.notOk(map._isMapEntry(entries.union()));
-  t.notOk(map._isMapEntry(entries.primitive()));
-  t.end();
-});
-
-test('map isArrayEntry', function(t) {
-  t.ok(map._isArrayEntry(entries.array()));
-
-  t.notOk(map._isArrayEntry(entries.map()));
-  t.notOk(map._isArrayEntry(entries.record()));
-  t.notOk(map._isArrayEntry(entries.enum()));
-  t.notOk(map._isArrayEntry(entries.fixed()));
-  t.notOk(map._isArrayEntry(entries.union()));
-  t.notOk(map._isArrayEntry(entries.primitive()));
-  t.end();
-});
-
-test('map isUnionEntry', function(t) {
-  t.ok(map._isUnionEntry(entries.union()));
-
-  t.notOk(map._isUnionEntry(entries.array()));
-  t.notOk(map._isUnionEntry(entries.map()));
-  t.notOk(map._isUnionEntry(entries.record()));
-  t.notOk(map._isUnionEntry(entries.enum()));
-  t.notOk(map._isUnionEntry(entries.fixed()));
-  t.notOk(map._isUnionEntry(entries.primitive()));
-  t.end();
-});
-
 test('map isPrimitiveEntry', function(t) {
   t.ok(map._isPrimitiveEntry(entries.primitive()));
 
@@ -116,5 +68,88 @@ test('map isPrimitiveEntry', function(t) {
   t.notOk(map._isPrimitiveEntry(entries.enum()));
   t.notOk(map._isPrimitiveEntry(entries.fixed()));
   t.notOk(map._isPrimitiveEntry(entries.union()));
+  t.end();
+});
+
+test('map needToAddToRegistry', function(t) {
+  var fullname = 'A.B.MyC';
+  var namedObject = {
+    name: 'MyPrimitive',
+    type: entries.primitive()
+  };
+
+  t.ok(map._needToAddToRegistry(entries.record()));
+  t.ok(map._needToAddToRegistry(entries.enum()));
+  t.ok(map._needToAddToRegistry(entries.fixed()));
+  t.ok(map._needToAddToRegistry(namedObject));
+
+  t.notOk(map._needToAddToRegistry(fullname));
+  t.notOk(map._needToAddToRegistry(entries.primitive()));
+  t.notOk(map._needToAddToRegistry(entries.array()));
+  t.notOk(map._needToAddToRegistry(entries.map()));
+  t.notOk(map._needToAddToRegistry(entries.union()));
+  t.end();
+});
+
+test('map needToGetFromRegistry', function(t) {
+  var fullname = 'A.B.MyC';
+  var nonPrimitiveName = 'D';
+  var namedObject = {
+    name: 'MyPrimitive',
+    type: entries.primitive()
+  };
+
+  t.ok(map._needToGetFromRegistry(fullname));
+  t.ok(map._needToGetFromRegistry(nonPrimitiveName));
+
+  t.notOk(map._needToGetFromRegistry(entries.record()));
+  t.notOk(map._needToGetFromRegistry(entries.enum()));
+  t.notOk(map._needToGetFromRegistry(entries.fixed()));
+  t.notOk(map._needToGetFromRegistry(namedObject));
+  t.notOk(map._needToGetFromRegistry(entries.primitive()));
+  t.notOk(map._needToGetFromRegistry(entries.array()));
+  t.notOk(map._needToGetFromRegistry(entries.map()));
+  t.notOk(map._needToGetFromRegistry(entries.union()));
+  t.end();
+});
+
+test('map skipRegistry', function(t) {
+  var fullname = 'A.B.MyC';
+  var nonPrimitiveName = 'D';
+  var namedObject = {
+    name: 'MyPrimitive',
+    type: entries.primitive()
+  };
+
+  t.ok(map._skipRegistry(entries.primitive()));
+  t.ok(map._skipRegistry(entries.array()));
+  t.ok(map._skipRegistry(entries.map()));
+  t.ok(map._skipRegistry(entries.union()));
+
+  t.notOk(map._skipRegistry(fullname));
+  t.notOk(map._skipRegistry(nonPrimitiveName));
+  t.notOk(map._skipRegistry(entries.record()));
+  t.notOk(map._skipRegistry(entries.enum()));
+  t.notOk(map._skipRegistry(entries.fixed()));
+  t.notOk(map._skipRegistry(namedObject));
+  t.end();
+});
+
+test('map getEntryOrNameType', function(t) {
+  var primitive = entries.primitive();
+  var namedObject = {
+    name: 'MyPrimitive',
+    type: primitive
+  };
+  var type = map._getEntryType;
+
+  t.equal(type(primitive), primitive);
+  t.equal(type(namedObject), primitive);
+  t.equal(type(entries.array()), COMPLEX_TYPE_NAMES.ARRAY);
+  t.equal(type(entries.map()), COMPLEX_TYPE_NAMES.MAP);
+  t.equal(type(entries.union()), COMPLEX_TYPE_NAMES.UNION);
+  t.equal(type(entries.record()), COMPLEX_TYPE_NAMES.RECORD);
+  t.equal(type(entries.enum()), COMPLEX_TYPE_NAMES.ENUM);
+  t.equal(type(entries.fixed()), COMPLEX_TYPE_NAMES.FIXED);
   t.end();
 });

@@ -1,5 +1,15 @@
 # avro-map
 
+1. [Install/Support](#installSupport)
+2. [Documentation](#documentation)
+3. [Discussion](#discussion)
+4. [Example](#example)
+5. [Warning](#warning)
+6. [Bugs and Issues](#bugsIssues)
+7. [Contributing](#contributing)
+
+---
+
 This package (currently) provides a single method for easily traversing an AVRO schema.  The traversal will automatically resolve all named references with their definitions.  That is, when the traversal encounters the full name `A.B.C` in the schema, it will provide the definition, e.g.
 
 ```js
@@ -12,7 +22,7 @@ This package (currently) provides a single method for easily traversing an AVRO 
 
 This will allow you to easily transform the schema into data structures that may be easier to work with.  **Name resolution follows all the same rules as defined by the AVRO specification**.
 
-# Install/Support
+# Install/Support<a name="installSupport"></a>
 
 ```sh
 npm install avro-map
@@ -42,7 +52,7 @@ var schemaTrees = map(schema, function(parent, entry, keyChain) {
 });
 ```
 
-# Documentation
+# Documentation<a name="documentation"></a>
 
 ### `map(schema, callback, initialValueFn)`
 
@@ -58,6 +68,8 @@ var schemaTrees = map(schema, function(parent, entry, keyChain) {
         | `type` | `String` | native type e.g. `"record"`, `"string"`, etc... |
         | `ref` | `Object` | raw definition from schema |
         | `recursive` | `Boolean` | `true` when `entry` has parent with same fullname |
+        | `namespace` | `String` | the current namespace |
+        | `registry` | `Function(String, String)` | Signature  `Object registry(String namespace, String name)`.  Returns the *raw* schema entry for `name` in `namespace`.  A name may not exist if it is not defined or has not yet been parsed. |
 
         Examples:
 
@@ -75,7 +87,7 @@ var schemaTrees = map(schema, function(parent, entry, keyChain) {
                    name: 'fixedSixteen' } }
         ```
 
-        As shown, a union's type will be set to `"union"` even though a union in an AVRO schema is only the array.  We do this to standardize this argument's structure received by `callback`.  When `entry.type` is a primitive, `entry.ref === entry.type`.
+        As shown, a union's type will be set to `"union"` even though a union in an AVRO schema is only the array.  We do this to standardize this argument's structure received by `callback`.
     3. `String[] keyChain`: an array of keys representing the location of this type within an object conforming to `schema`.  That is, a string is pushed onto this array for each recursive call.  The table below shows which key is added for each recursable type:
 
         | type | recursable properties | added to `keyChain` |
@@ -90,7 +102,7 @@ var schemaTrees = map(schema, function(parent, entry, keyChain) {
 
 **return**: `T[]` the return value of `callback` applied to the top level nodes of `schema`.
 
-# Discussion
+# Discussion<a name="discussion"></a>
 
 avro-map can be use when one would like to traverse an AVRO schema in a depth-first search manner, e.g. build a tree.
 
@@ -98,7 +110,9 @@ Simply applying `Array.prototype.map` to the AVRO schema (array) has little valu
 
 This is exactly what avro-map automates.  The `map` function tries to do a little as possible while still allowing one to easily traverse the entire schema as if the name(space)d references did not exist.  As each type is encountered, `map` will store/retrieve types and provide those to the callback function.  The return values of the callback are `reduce`d down each DFS branch, i.e., the return value of the callback at one schema entry is provided as an argument to the callback for each child entry.
 
-# Example `map` execution
+# Example `map` execution<a name="example"></a>
+
+Complete working example in `emaples/`.
 
 ```js
 var map = require('avro-map').map;
@@ -168,12 +182,28 @@ And `mapped` looks like:
 ]
 ```
 
-# Bugs/Issues
+# Warning<a name="warning"></a>
+
+avro-map is not an AVRO schema validator and it will not check that all schema entries are well defined.  Rather, avro-map's main purpose is to simply iterate through an AVRO schema while providing name resolution.  This is intentional as this project was created as a precursor to AvroJS which extends native AVRO.  For example, avro-map will happily register any schema entry with a `name` property, e.g.
+
+```js
+[{
+  name: 'someName',
+  type: 'string'
+}, {
+  type: 'array',
+  items: 'someName'
+}]
+```
+
+is not a valid AVRO schema but avro-map will register `someName` in the global namespace and then look it up when it recurses into `items`.
+
+# Bugs/Issues<a name="bugsIssues"></a>
 
 * Please open an Issue on the Github repo.
 * Run your code with the environment variable `DEBUG=avro-map` to see extra logging.
 
-# Contributing
+# Contributing<a name="contributing"></a>
 
 * No lint errors.
 * No test errors.

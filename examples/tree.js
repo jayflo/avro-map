@@ -52,7 +52,7 @@ var schema = [{
   type: 'record',
   name: 'B',
   fields: [{
-    name: 'B1', type: [null, 'int', 'A']
+    name: 'B1', type: ['null', 'int', 'A']
   }, {
     name: 'B2', type: {type: 'array', items: 'string'}
   }]
